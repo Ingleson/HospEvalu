@@ -2,7 +2,6 @@
   "name": "projeto-final-backend",
   "version": "1.0.0",
   "main": "app.js",
-  "author": "Raphael <rapha.gloria@gmail.com>",
   "repository": {
     "url": "https://github.com/rapha021/projeto-final-backend"
   },
