@@ -1,41 +1,50 @@
-import { AppDataSource } from "../../data-source";
-import { AppError } from "../../Error/appError";
-import { IHospitalRequest } from "../../interfaces/hospital";
+import { AppDataSource } from "../../data-source"
+import { Address } from "../../Entities/address.entity"
+import { Hospital } from "../../Entities/hospital.entity"
+import { AppError } from "../../Error/appError"
+import { IHospitalRequest } from "../../Interfaces/hospital"
 
-export const createHospitalService = async ({address, name, cnpj}: IHospitalRequest) => {
-  
-  const hospitalRepository = AppDataSource.getRepository("hospital");
-  const addressRepository = AppDataSource.getRepository("address");
+export const createHospitalService = async ({
+  address,
+  name,
+  cnpj,
+}: IHospitalRequest) => {
+  const hospitalRepository = AppDataSource.getRepository(Hospital)
+  const addressRepository = AppDataSource.getRepository(Address)
 
-  const findAddress = await addressRepository.findOneBy({cep: address.cep, number: address.number});
-  const findCnpj = await hospitalRepository.findOneBy({cnpj});
+  const findAddress = await addressRepository.findOneBy({
+    zipCode: address.zipCode,
+    number: address.number,
+  })
+  const findCnpj = await hospitalRepository.findOneBy({ cnpj })
 
-  if(findAddress) {
-    throw new AppError(400, "Address already exists");
-  };
-  
-  if(findCnpj) {
-    throw new AppError(400, "Cpnj already exists");
-  };
+  // if (findAddress) {
+  //   throw new AppError(400, "Address already exists")
+  // }
+  // Verificar lógica do endereço
+
+  if (findCnpj) {
+    throw new AppError(400, "Cpnj already exists")
+  }
 
   const newAddress = addressRepository.create({
-    state: address.state,
     city: address.city,
-    hood: address.hood,
     complement: address.complement,
-    cep: address.cep,
-    number: address.number
-  });
+    number: address.number,
+    hood: address.hood,
+    state: address.state,
+    zipCode: address.zipCode,
+  })
 
-  const createdAddress = await addressRepository.save(newAddress);
+  const createdAddress = await addressRepository.save(newAddress)
 
   const hospital = hospitalRepository.create({
-    address: createdAddress,
+    address: findAddress || createdAddress,
     name,
-    cnpj
-  });
+    cnpj,
+  })
 
-  await hospitalRepository.save(hospital);
+  await hospitalRepository.save(hospital)
 
-  return hospital;
-};
+  return hospital
+}
