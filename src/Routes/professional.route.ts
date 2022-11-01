@@ -5,6 +5,7 @@ import deleteProfessionalController from "../Controllers/Professional/deleteProf
 import listAllProfessionalsController from "../Controllers/Professional/listAllProfessionals.controller"
 import updateProfessionalController from "../Controllers/Professional/updateProfessional.controller"
 import ensureAuthMiddleware from "../Middlewares/ensureAuth.middleware"
+import ensureIsAdmMiddleware from "../Middlewares/ensureIsAdm.middleware"
 
 const routes = Router()
 
@@ -18,8 +19,13 @@ routes.patch(
   activateProfessionalController
 )
 
-routes.patch("/:id", updateProfessionalController)
+routes.patch("/:id", ensureAuthMiddleware, updateProfessionalController)
 
-routes.delete("/:id", deleteProfessionalController)
+routes.delete(
+  "/:id",
+  ensureAuthMiddleware,
+  ensureIsAdmMiddleware,
+  deleteProfessionalController
+)
 
 export default routes

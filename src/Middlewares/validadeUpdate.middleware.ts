@@ -6,12 +6,9 @@ const validadeUpdateMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.body.id !== undefined) {
-    throw new AppError(401, "Unauthorized");
-  }
-  
+
   if (req.body.isAdm !== undefined) {
-    throw new AppError(401, "Unauthorized");
+    throw new AppError(401, "Não é possível alterar status de ADM");
   }
 
   return next();

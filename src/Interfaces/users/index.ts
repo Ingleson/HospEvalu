@@ -1,3 +1,12 @@
+export interface IAddressUpdate {
+  state?: string
+  city?: string
+  hood?: string
+  complement?: string
+  zipCode?: string
+  number?: number
+}
+
 export interface IAddress {
   state: string
   city: string
@@ -37,10 +46,10 @@ export interface IUserLogin {
 
 export interface IUserUpdate {
   id: string
-  name?: string
-  email?: string
-  password?: string
-  address?: IAddress
+  name: string
+  email: string
+  password: string
+  address: IAddress
 }
 
 export interface ILoggedUser {
