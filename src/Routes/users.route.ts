@@ -12,5 +12,5 @@ userRoutes.get("", ensureAuthMiddleware, ensureIsAdmMiddleware, listUsersControl
 userRoutes.patch("/:id", ensureAuthMiddleware, validadeUpdateMiddleware, updateUserController); //token e adm / não adm para o próprio user
 userRoutes.delete("/:id", ensureAuthMiddleware, ensureIsAdmMiddleware, deleteUserController); //token e adm
 
-export default userRoutes;
+export {userRoutes};
 

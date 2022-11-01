@@ -1,3 +1,11 @@
+export interface IAddressUpdate {
+    state?: string
+    city?: string
+    road?: string
+    complement?: string
+    zipCode?: string
+    number?: number
+}
 
 export interface IAddress {
     state: string

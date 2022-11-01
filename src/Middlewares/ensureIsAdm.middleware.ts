@@ -7,7 +7,7 @@ const ensureIsAdmMiddleware = async (
   next: NextFunction
 ) => {
   if (!req.user.isAdm) {
-    throw new AppError(403, "User isn't admin");
+    throw new AppError(403, "Apenas administrador.");
   }
 
   return next();

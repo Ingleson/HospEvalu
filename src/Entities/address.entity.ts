@@ -4,16 +4,15 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from "typeorm"
-import { v4 as uuid } from "uuid"
 import { Hospital } from "./hospital.entity"
 import { User } from "./user.entity"
 
 @Entity("address")
 export class Address {
-  @PrimaryColumn("uuid")
-  readonly id: string
+  @PrimaryGeneratedColumn("uuid")
+  id: string
 
   @Column()
   state: string
@@ -40,9 +39,4 @@ export class Address {
   @OneToMany((type) => User, (user) => user.address)
   user: User[]
 
-  constructor() {
-    if (!this.id) {
-      this.id = uuid()
-    }
-  }
 }

@@ -1,8 +1,9 @@
 import { IUserRequest, IUserResponse } from "../../Interfaces/users";
 import { AppDataSource } from "../../data-source";
 import { hash } from "bcrypt";
-import { AppError } from "../../Error/appError";
 import { User } from "../../Entities/user.entity";
+import { Address } from "../../Entities/address.entity";
+import { AppError } from "../../Error/appError";
 
 const createUserService = async ({
   name,
@@ -12,12 +13,23 @@ const createUserService = async ({
   address
 }: IUserRequest): Promise<IUserResponse> => {
   const userRepository = AppDataSource.getRepository(User);
+  const addressRepository = AppDataSource.getRepository(Address);
+
+  
+  const findAddress = await addressRepository.findOneBy({
+    zipCode: address.zipCode,
+    number: address.number
+  });
+  
+  if (!findAddress) {
+    await addressRepository.save(address);
+  }
 
   const findUser = await userRepository.findOneBy({
     email,
   });
 
-  if (findUser !== null) {
+  if (findUser) {
     throw new AppError(400, "Usuário já existente");
   }
 
@@ -28,7 +40,7 @@ const createUserService = async ({
     email,
     password: hashedPassword,
     isAdm,
-    address
+    address: findAddress ? findAddress : address
   });
 
   await userRepository.save(user);

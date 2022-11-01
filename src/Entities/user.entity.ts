@@ -5,17 +5,17 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm"
-import { v4 as uuid } from "uuid"
+import { Exclude } from "class-transformer";
 import { Address } from "./address.entity"
 import { Comment } from "./comment.entity"
 import { Schedule } from "./schedules.entity"
 
 @Entity("users")
 export class User {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   readonly id: string
 
   @Column({
@@ -29,6 +29,7 @@ export class User {
   email: string
 
   @Column()
+  @Exclude()
   password: string
 
   @Column()
@@ -44,7 +45,7 @@ export class User {
     eager: true,
   })
   @JoinColumn()
-  address?: Address
+  address: Address
 
   @OneToMany((type) => Schedule, (schedule) => schedule.user)
   schedules: Schedule[]
@@ -52,9 +53,4 @@ export class User {
   @OneToMany((type) => Comment, (comment) => comment.user)
   comment: Comment[]
 
-  constructor() {
-    if (!this.id) {
-      this.id = uuid()
-    }
-  }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-
+import { instanceToPlain } from "class-transformer";
 import { IUserRequest, IUserUpdate } from "../Interfaces/users";
 import createUserService from "../Services/users/createUser.service";
 import deleteUserService from "../Services/users/deleteUser.service";
@@ -8,14 +8,14 @@ import updateUserService from "../Services/users/updateUser.service";
 
 
 const createUserController = async (req: Request, res: Response) => {
-    const user: IUserRequest = req.body;
+    const user: IUserRequest = req.body;    
     const createdUser = await createUserService(user);
-    return res.status(201).json(createdUser);
+    return res.status(201).json(instanceToPlain(createdUser));
 };
 
 const listUsersController = async (req: Request, res: Response) => {
     const users = await listUsersService();
-    return res.json(users);
+    return res.json(instanceToPlain(users));
 };
 
 const updateUserController = async (req: Request, res: Response) => {
@@ -31,13 +31,13 @@ const updateUserController = async (req: Request, res: Response) => {
     loggedUser
 );
   
-    return res.status(200).json(updatedUser);
+    return res.status(200).json(instanceToPlain(updatedUser));
 };
 
 const deleteUserController = async (req: Request, res: Response) => {
     const id: string = req.params.id;    
     await deleteUserService(id);
-    return res.json({message: "User Deleted"});
+    return res.json({message: "Usuário deletado"});
 };
 
 
