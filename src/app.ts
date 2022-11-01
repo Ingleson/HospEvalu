@@ -1,5 +1,6 @@
-import "reflect-metadata"
 import "express-async-errors"
+import "reflect-metadata"
+import "dotenv/config"
 
 import express from "express"
 import errorMiddleware from "./Middlewares/error/error.middleware"

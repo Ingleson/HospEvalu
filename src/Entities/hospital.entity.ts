@@ -18,8 +18,11 @@ export class Hospital {
   @Column()
   name: string
 
+  @Column({ unique: true })
+  cnpj: string
+
   @OneToOne((type) => Address, (address) => address.hospital, {
-    eager: true
+    eager: true,
   })
   @JoinColumn()
   address?: Address

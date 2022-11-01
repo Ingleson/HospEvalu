@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -21,7 +20,7 @@ export class Address {
   city: string
 
   @Column()
-  road: string
+  hood: string
 
   @Column()
   complement: string
@@ -33,10 +32,8 @@ export class Address {
   number: number
 
   @OneToOne((type) => Hospital, (hospital) => hospital.id)
-  @JoinColumn()
   hospital: Hospital[]
 
   @OneToMany((type) => User, (user) => user.address)
   user: User[]
-
 }
