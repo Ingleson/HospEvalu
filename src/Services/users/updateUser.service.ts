@@ -2,6 +2,7 @@ import {AppDataSource} from "../../data-source";
 import { hash } from "bcrypt";
 import { AppError } from "../../Error/appError";
 import { ILoggedUser, IUser, IAddress } from "../../Interfaces/users";
+import { User } from "../../Entities/user.entity";
 
 const updateUserService = async (
   name: string | undefined,  
@@ -18,11 +19,11 @@ const updateUserService = async (
   });
 
   if (!findUser) {
-    throw new AppError(404, "Invalid email or password");
+    throw new AppError(404, "Email ou senha inválidos");
   }
 
   if (loggedUser.isAdm === false && id !== loggedUser.id) {
-    throw new AppError(401, "You have not permission");
+    throw new AppError(401, "Sem permissão");
   }
 
   await userRepository.update(id, {
@@ -36,7 +37,7 @@ const updateUserService = async (
     id,
   });
 
-  return user;
+  return user!;
 };
 
 export default updateUserService;

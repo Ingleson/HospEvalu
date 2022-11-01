@@ -4,6 +4,7 @@ import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AppError } from "../../../Error/appError";
 import "dotenv/config";
+import { User } from "../../../Entities/user.entity";
 
 const createSessionUserService = async ({
   email,
@@ -16,13 +17,13 @@ const createSessionUserService = async ({
   });
 
   if (!user) {
-    throw new AppError(403, "Invalid email or password");
+    throw new AppError(403, "Email ou senha inválidos");
   }
 
   const passwordMatch = await compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new AppError(403, "Invalid email or password");
+    throw new AppError(403, "Email ou senha inválidos");
   }
 
   const token = jwt.sign(

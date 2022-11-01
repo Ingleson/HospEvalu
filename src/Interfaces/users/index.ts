@@ -2,9 +2,9 @@
 export interface IAddress {
     state: string
     city: string
-    hood: string
+    road: string
     complement: string
-    cep: string
+    zipCode: string
     number: number
 }
 

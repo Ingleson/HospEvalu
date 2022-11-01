@@ -1,4 +1,5 @@
 import {AppDataSource} from "../../data-source";
+import { User } from "../../Entities/user.entity";
 import { AppError } from "../../Error/appError";
 
 const deleteUserService = async (
@@ -11,7 +12,7 @@ const deleteUserService = async (
     });
   
     if (!findUser) {
-      throw new AppError(404, "User not found");
+      throw new AppError(404, "Usuário não encontrado");
     }
         
     await userRepository.delete({
