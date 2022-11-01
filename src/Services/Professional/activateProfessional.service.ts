@@ -2,9 +2,9 @@ import { AppDataSource } from "../../data-source"
 import { AppError } from "../../Error/appError"
 
 const activateProfessionalService = async (id: string, user: any) => {
-  // if (!user.isAdm) {
-  //   throw new AppError(401, "Apenas usuários administradores")
-  // }
+  if (!user.isAdm) {
+    throw new AppError(401, "Apenas usuários administradores")
+  }
 
   const professionalRepository = AppDataSource.getRepository("Professional") //Importar quando as entity ficar pronta
 

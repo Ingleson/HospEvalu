@@ -4,17 +4,17 @@ import createProfessionalController from "../Controllers/Professional/createProf
 import deleteProfessionalController from "../Controllers/Professional/deleteProfessional.controller"
 import listAllProfessionalsController from "../Controllers/Professional/listAllProfessionals.controller"
 import updateProfessionalController from "../Controllers/Professional/updateProfessional.controller"
-import authUserMiddleware from "../Middlewares/authUser.middleware"
+import ensureAuthMiddleware from "../Middlewares/ensureAuth.middleware"
 
 const routes = Router()
 
 routes.post("", createProfessionalController)
 
-routes.get("", authUserMiddleware, listAllProfessionalsController)
+routes.get("", ensureAuthMiddleware, listAllProfessionalsController)
 
 routes.patch(
   "/activate/:id",
-  authUserMiddleware,
+  ensureAuthMiddleware,
   activateProfessionalController
 )
 

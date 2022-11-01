@@ -35,17 +35,14 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     throw new AppError(404, "Hospital não encontrado")
   }
 
-  const newProfessional = new Professional()
-
-  newProfessional.name = name
-  newProfessional.email = email
-  newProfessional.password = bcrypt.hashSync(password, 10)
-  newProfessional.crm = CRM
-  newProfessional.serviceType = getService
-  newProfessional.hospital = getHospital || undefined
-
-  professionalRepository.create(newProfessional)
-  await professionalRepository.save(newProfessional)
+  await professionalRepository.save({
+    name,
+    email,
+    password: bcrypt.hashSync(password, 10),
+    crm: CRM,
+    serviceType: getService,
+    hospital: getHospital,
+  })
 
   const createdProfessional = await professionalRepository.findOneBy({ email })
 
