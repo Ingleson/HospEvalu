@@ -3,19 +3,12 @@ import { AppError, handleError } from "../../Error/appError"
 import activateProfessionalService from "../../Services/Professional/activateProfessional.service"
 
 const activateProfessionalController = async (req: Request, res: Response) => {
-  try {
-    const id = req.params.id
-    const user = req.user
-    const is_active = req.body
+  const id = req.params.id
+  const user = req.user
 
-    const response = await activateProfessionalService(id, user, is_active)
+  const response = await activateProfessionalService(id, user)
 
-    return res.status(202).json(response)
-  } catch (err) {
-    if (err instanceof AppError) {
-      return handleError(err, res)
-    }
-  }
+  return res.status(202).json(response)
 }
 
 export default activateProfessionalController

@@ -3,18 +3,13 @@ import { AppError, handleError } from "../../Error/appError"
 import updateProfessionalService from "../../Services/Professional/updateProfessional.service"
 
 const updateProfessionalController = async (req: Request, res: Response) => {
-  try {
-    const data = req.body
-    const user = req.user
+  const data = req.body
+  const user = req.user
+  const id = req.params.id
 
-    const updatedProfessional = await updateProfessionalService(data, user)
+  const updatedProfessional = await updateProfessionalService(data, user, id)
 
-    return res.json(updatedProfessional)
-  } catch (err) {
-    if (err instanceof AppError) {
-      return handleError(err, res)
-    }
-  }
+  return res.json(updatedProfessional)
 }
 
 export default updateProfessionalController

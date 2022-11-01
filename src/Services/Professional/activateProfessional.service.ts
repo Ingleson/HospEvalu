@@ -1,14 +1,10 @@
 import { AppDataSource } from "../../data-source"
 import { AppError } from "../../Error/appError"
 
-const activateProfessionalService = async (
-  id: string,
-  user: any,
-  is_active: boolean
-) => {
-  if (!user.is_adm) {
-    throw new AppError(401, "Apenas usuários administradores")
-  }
+const activateProfessionalService = async (id: string, user: any) => {
+  // if (!user.isAdm) {
+  //   throw new AppError(401, "Apenas usuários administradores")
+  // }
 
   const professionalRepository = AppDataSource.getRepository("Professional") //Importar quando as entity ficar pronta
 
@@ -20,12 +16,16 @@ const activateProfessionalService = async (
     throw new AppError(404, "Profissional não encontrado")
   }
 
+  if (professionalToBeActivated.isActive) {
+    throw new AppError(409, "Este profissional já esta ativo")
+  }
+
   await professionalRepository.update(id, {
-    is_active,
+    isActive: true,
   })
 
   return {
-    message: `O profissional com CRM: ${professionalToBeActivated.CRM} foi ativado`,
+    message: `O profissional com CRM: ${professionalToBeActivated.crm} foi ativado`,
   }
 }
 

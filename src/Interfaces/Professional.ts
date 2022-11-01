@@ -17,7 +17,7 @@ export interface IProfessionalRequest {
   password: string
   CRM: string
   service_type_id: string
-  hospital_id: string //Pensar em como será a lógica do hospital_id
+  hospital_cnpj: string
 }
 
 export interface IProfessionalUpdate {
@@ -25,5 +25,5 @@ export interface IProfessionalUpdate {
   email: string
   password: string
   service_type_id: string
-  hospital_id: string
+  hospital_cnpj: string
 }

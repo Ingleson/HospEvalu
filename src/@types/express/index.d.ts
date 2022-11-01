@@ -7,7 +7,7 @@ declare global {
         id: string
         name: string
         email: string
-        is_adm: boolean
+        isAdm: boolean
       }
     }
   }

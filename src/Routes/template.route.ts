@@ -3,8 +3,6 @@ import templateController from "../Controllers/template.controller"
 
 const routes = Router()
 
-export const templateRoute = () => {
-  routes.post("/", templateController)
+routes.post("/", templateController)
 
-  return routes
-}
+export default routes
