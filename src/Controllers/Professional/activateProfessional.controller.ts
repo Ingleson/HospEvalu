@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { AppError, handleError } from "../../Error/appError"
-import activateProfessionalService from "../../Services/Professional/activateProfessional.service"
+import activateProfessionalService from "../../Services/professional/activateProfessional.service"
 
 const activateProfessionalController = async (req: Request, res: Response) => {
   const id = req.params.id

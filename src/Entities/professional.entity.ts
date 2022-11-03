@@ -1,7 +1,10 @@
+import { Exclude } from "class-transformer"
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -24,6 +27,7 @@ export class Professional {
   email: string
 
   @Column()
+  @Exclude()
   password: string
 
   @Column()
@@ -38,12 +42,10 @@ export class Professional {
   @Column({ default: false })
   isActive: boolean
 
-  @OneToMany((type) => Comment, (comment) => comment.professional, {
-    eager: true,
-  })
+  @OneToMany((type) => Comment, (comment) => comment.professional)
   comments: Comment[]
 
-  @OneToMany((type) => Schedule, (schedule) => schedule.professional, {
+  @ManyToMany((type) => Schedule, (schedule) => schedule, {
     eager: true,
   })
   schedules: Schedule[]

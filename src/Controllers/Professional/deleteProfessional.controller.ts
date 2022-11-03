@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import deleteProfessionalService from "../../Services/Professional/deleteProfessional.service"
+import deleteProfessionalService from "../../Services/professional/deleteProfessional.service"
 
 const deleteProfessionalController = async (req: Request, res: Response) => {
   const id = req.params.id

@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm"
 import { v4 as uuid } from "uuid"
 import { Professional } from "./professional.entity"
 import { ServiceType } from "./serviceType.entity"
@@ -20,14 +28,16 @@ export class Schedule {
   })
   description: string
 
-  @ManyToOne((type) => User, (user) => user.id)
+  @ManyToMany((type) => User, (user) => user.id)
+  @JoinTable()
   user: User
+
+  @ManyToMany((type) => Professional, (professional) => professional.id)
+  @JoinTable()
+  professional: Professional
 
   @ManyToOne((type) => ServiceType, (serviceType) => serviceType.id)
   serviceType: ServiceType
-
-  @ManyToOne(type => Professional, professional => professional.id)
-  professional: Professional
 
   constructor() {
     if (!this.id) {
