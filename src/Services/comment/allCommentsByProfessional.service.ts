@@ -1,19 +1,23 @@
 import { AppDataSource } from "../../data-source"
+
 import { Professional } from "../../Entities/professional.entity"
-import { AppError } from "../../Error/appError";
+import { AppError } from "../../Error/appError"
 
 export const allCommentsByProfessionalService = async (id: string) => {
-  const professionalRepository = AppDataSource.getRepository(Professional);
+  const professionalRepository = AppDataSource.getRepository(Professional)
 
   const findComments = await professionalRepository.findOne({
     where: {
-      id
-    }, relations: {
-      comments: true
-    }
-  });
+      id,
+    },
+    relations: {
+      comments: true,
+    },
+  })
 
-  if(!findComments) {
-    throw new AppError(404, 'Professional not found');
-  };
+  if (!findComments) {
+    throw new AppError(404, "Professional not found")
+  }
+
+  return findComments
 }

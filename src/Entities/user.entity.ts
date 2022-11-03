@@ -55,5 +55,5 @@ export class User {
   schedules: Schedule[]
 
   @OneToMany((type) => Comment, (comment) => comment.user)
-  comment: Comment[]
+  comments: Comment[]
 }
