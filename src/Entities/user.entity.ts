@@ -3,12 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm"
-import { Exclude } from "class-transformer";
+import { Exclude } from "class-transformer"
 import { Address } from "./address.entity"
 import { Comment } from "./comment.entity"
 import { Schedule } from "./schedules.entity"
@@ -47,10 +48,9 @@ export class User {
   @JoinColumn()
   address: Address
 
-  @OneToMany((type) => Schedule, (schedule) => schedule.user)
+  @ManyToMany((type) => Schedule, (schedule) => schedule.user)
   schedules: Schedule[]
 
   @OneToMany((type) => Comment, (comment) => comment.user)
   comment: Comment[]
-
 }
