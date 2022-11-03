@@ -8,4 +8,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "dev"]
+CMD yarn typeorm migration:run -d src/data-source; yarn dev
