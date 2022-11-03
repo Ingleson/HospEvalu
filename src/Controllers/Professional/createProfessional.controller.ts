@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { IProfessionalRequest } from "../../Interfaces/Professional"
-import createProfessionalService from "../../Services/Professional/createProfessional.service"
+import createProfessionalService from "../../Services/professional/createProfessional.service"
 
 const createProfessionalController = async (req: Request, res: Response) => {
   const data: IProfessionalRequest = req.body
