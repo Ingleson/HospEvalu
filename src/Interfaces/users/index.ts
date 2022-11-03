@@ -24,6 +24,13 @@ export interface IUserRequest {
   address?: IAddress
 }
 
+export interface IUserWithOutPasswordRequest {
+  name: string
+  email: string
+  isAdm: boolean
+  address?: IAddress
+}
+
 export interface IUserResponse extends IUserRequest {
   id: string
 }
