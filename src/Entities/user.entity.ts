@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm"
-import { Exclude } from "class-transformer";
+import { Exclude } from "class-transformer"
 import { Address } from "./address.entity"
 import { Comment } from "./comment.entity"
 import { Schedule } from "./schedules.entity"
@@ -51,6 +51,5 @@ export class User {
   schedules: Schedule[]
 
   @OneToMany((type) => Comment, (comment) => comment.user)
-  comment: Comment[]
-
+  comments: Comment[]
 }
