@@ -114,7 +114,7 @@ describe('Testando rotas de usuário', ()=> {
         expect(resultNotAdmin.status).toBe(201)
         expect(resultAdmin.body).toHaveProperty('id')
         expect(resultNotAdmin.body).toHaveProperty('id')
-        expect(resultNotAdmin.body).not.toHaveProperty('password')
+        expect(resultAdmin.body).not.toHaveProperty("password")
         expect(resultNotAdmin.body).not.toHaveProperty('password')
         createdUsers.push(resultAdmin.body)
         createdUsers.push(resultNotAdmin.body)

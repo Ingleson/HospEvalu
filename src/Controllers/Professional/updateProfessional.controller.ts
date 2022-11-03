@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { AppError, handleError } from "../../Error/appError"
-import updateProfessionalService from "../../Services/Professional/updateProfessional.service"
+import updateProfessionalService from "../../Services/professional/updateProfessional.service"
 
 const updateProfessionalController = async (req: Request, res: Response) => {
   const data = req.body
