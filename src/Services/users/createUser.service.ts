@@ -15,6 +15,14 @@ const createUserService = async ({
   const userRepository = AppDataSource.getRepository(User)
   const addressRepository = AppDataSource.getRepository(Address)
 
+  if(!password){
+    throw new AppError(400, "Senha requerida")
+}
+
+  if(!name || !email || isAdm === undefined || !address){
+    throw new AppError(400, "Está faltando dados")
+}
+
   const findAddress = await addressRepository.findOneBy({
     zipCode: address?.zipCode,
     number: address?.number,
