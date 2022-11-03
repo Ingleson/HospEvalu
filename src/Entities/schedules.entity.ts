@@ -21,7 +21,7 @@ export class Schedule {
   description: string
 
   @ManyToOne((type) => User, (user) => user.id)
-  user: User[]
+  user: User
 
   @ManyToOne((type) => ServiceType, (serviceType) => serviceType.id)
   serviceType: ServiceType
