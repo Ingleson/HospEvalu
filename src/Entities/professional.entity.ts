@@ -3,6 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -43,7 +45,7 @@ export class Professional {
   @OneToMany((type) => Comment, (comment) => comment.professional)
   comments: Comment[]
 
-  @OneToMany((type) => Schedule, (schedule) => schedule.professional, {
+  @ManyToMany((type) => Schedule, (schedule) => schedule, {
     eager: true,
   })
   schedules: Schedule[]
