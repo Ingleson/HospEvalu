@@ -18,32 +18,25 @@ export const createCommentService = async ({
   const findUser = await userRepository.findOneBy({id: userId});
   const findProfessional = await professionalRepository.findOneBy({id: professionalId});
 
-  if(!findUser && !findProfessional) {
-    throw new AppError(404, 'You need a profile with user/professional');
+  if(!findUser) {
+    throw new AppError(404, 'user not found');
+  };
+
+  if(!findProfessional) {
+    throw new AppError(404, 'professional not found')
   };
 
   if(content.length < 1) {
     throw new AppError(404, 'To do a comment');
   };
 
-  if(findUser) {
-    const newComment = commentRepository.create({ 
-      user: {id: userId},
-      content
-    });
+  const newComment = commentRepository.create({ 
+    user: {id: userId},
+    professional: {id: professionalId},
+    content
+  });
 
-    await commentRepository.save(newComment);
+  await commentRepository.save(newComment);
 
-    return newComment;
-  };
-  if(findProfessional) {
-    const newComment = commentRepository.create({
-      professional: {id: userId},
-      content
-    });
-
-    await commentRepository.save(newComment);
-
-    return newComment;
-  };
+  return newComment;
 };
