@@ -43,15 +43,16 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @ManyToOne((type) => Address, (address) => address.id, {
+  @ManyToOne((type) => Address, (address) => address.user, {
     eager: true,
   })
   @JoinColumn()
   address: Address
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule, {
+  @ManyToMany((type) => Schedule, (schedule) => schedule.user, {
     eager: true,
   })
+  @JoinTable()
   schedules: Schedule[]
 
   @OneToMany((type) => Comment, (comment) => comment.user)
