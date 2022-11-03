@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -29,7 +30,7 @@ export class Schedule {
 
   @ManyToMany((type) => User, (user) => user.id)
   @JoinTable()
-  user: User[]
+  user: User
 
   @ManyToMany((type) => Professional, (professional) => professional.id)
   @JoinTable()

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -44,7 +45,7 @@ export class Professional {
   })
   comments: Comment[]
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule.professional, {
+  @ManyToMany((type) => Schedule, (schedule) => schedule, {
     eager: true,
   })
   schedules: Schedule[]

@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -48,7 +49,9 @@ export class User {
   @JoinColumn()
   address: Address
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule.user)
+  @ManyToMany((type) => Schedule, (schedule) => schedule, {
+    eager: true,
+  })
   schedules: Schedule[]
 
   @OneToMany((type) => Comment, (comment) => comment.user)

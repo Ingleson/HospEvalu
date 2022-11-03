@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import { Professional } from "../../Entities/professional.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
 import { Hospital } from "../../Entities/hospital.entity"
+import { Schedule } from "../../Entities/schedules.entity"
 
 const createProfessionalService = async (data: IProfessionalRequest) => {
   const { name, email, password, CRM, service_type_id, hospital_cnpj } = data
