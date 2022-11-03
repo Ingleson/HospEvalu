@@ -16,6 +16,14 @@ const updateUserService = async (
   const userRepository = AppDataSource.getRepository(User)
   const addressRepository = AppDataSource.getRepository(Address)
 
+  const findUser = await userRepository.findOneBy({
+    id,
+  })
+
+  if (!findUser) {
+    throw new AppError(404, "Usuário não encontrado")
+  }
+
   if (email) {
     const existEmail = await userRepository.findOneBy({
       email,
@@ -24,14 +32,6 @@ const updateUserService = async (
     if (existEmail) {
       throw new AppError(404, "Email já existente")
     }
-  }
-
-  const findUser = await userRepository.findOneBy({
-    id,
-  })
-
-  if (!findUser) {
-    throw new AppError(404, "Email ou senha inválidos")
   }
 
   const findAddress = await addressRepository.findOneBy({
