@@ -19,5 +19,9 @@ export const allCommentsByProfessionalService = async (id: string) => {
     throw new AppError(404, "Professional not found")
   }
 
+  if (findComments.comments.length < 1) {
+    throw new AppError(404, "Comments not found")
+  }
+
   return findComments
 }

@@ -29,11 +29,10 @@ export class Schedule {
   description: string
 
   @ManyToMany((type) => User, (user) => user.id)
-  @JoinTable()
+  
   user: User
 
   @ManyToMany((type) => Professional, (professional) => professional.id)
-  @JoinTable()
   professional: Professional
 
   @ManyToOne((type) => ServiceType, (serviceType) => serviceType.id)

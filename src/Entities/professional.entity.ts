@@ -45,9 +45,10 @@ export class Professional {
   @OneToMany((type) => Comment, (comment) => comment.professional)
   comments: Comment[]
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule, {
+  @ManyToMany((type) => Schedule, (schedule) => schedule.professional, {
     eager: true,
   })
+  @JoinTable()
   schedules: Schedule[]
 
   @ManyToOne((type) => Hospital, (hospital) => hospital.professional, {
@@ -55,7 +56,7 @@ export class Professional {
   })
   hospital?: Hospital
 
-  @ManyToOne((type) => ServiceType, (servicetype) => servicetype, {
+  @ManyToOne((type) => ServiceType, (servicetype) => servicetype.professional, {
     eager: true,
   })
   serviceType: ServiceType

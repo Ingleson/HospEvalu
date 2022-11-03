@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryColumn,
-} from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 import { Professional } from "./professional.entity"
 import { User } from "./user.entity"
