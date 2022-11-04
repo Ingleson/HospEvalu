@@ -11,17 +11,7 @@ const updateProfessionalService = async (
   user: any,
   id: string
 ) => {
-  const { name, email, password, hospital_cnpj, service_type_id } = data
-
-  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
-
-  const getService = await serviceTypeRepository.findOneBy({
-    id: service_type_id,
-  })
-
-  if (!getService) {
-    throw new AppError(404, "Tipo de serviço não encontrado")
-  }
+  const { name, email, password, hospital_cnpj, serviceType } = data
 
   const hospitalRepository = AppDataSource.getRepository(Hospital)
 
@@ -47,6 +37,20 @@ const updateProfessionalService = async (
     throw new AppError(403, "Sem autorização")
   }
 
+  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
+
+  const getService = await serviceTypeRepository.findOneBy({
+    name: serviceType.name,
+    duration: serviceType.duration,
+    price: serviceType.price,
+  })
+
+  const service = getService
+    ? getService
+    : await serviceTypeRepository.save(serviceType)
+
+  console.log(service)
+
   if (
     password &&
     bcrypt.compareSync(password, professionalToBeUpdated.password)
@@ -54,17 +58,19 @@ const updateProfessionalService = async (
     throw new AppError(409, "Digite uma senha diferente da atual")
   }
 
-  const newPassword = bcrypt.hashSync(password, 10)
+  const newPassword = password && bcrypt.hashSync(password, 10)
 
-  professionalRepository.update(professionalToBeUpdated.id, {
+  await professionalRepository.update(id, {
     name: name || professionalToBeUpdated.name,
     email: email || professionalToBeUpdated.email,
     password: newPassword || professionalToBeUpdated.password,
     hospital: getHospital || professionalToBeUpdated.hospital,
-    serviceType: getService || professionalToBeUpdated.serviceType,
+    serviceType: service,
   })
 
-  return { message: "usuario atualizado" }
+  const updatedProfessional = professionalRepository.findOneBy({ id })
+
+  return updatedProfessional
 }
 
 export default updateProfessionalService
