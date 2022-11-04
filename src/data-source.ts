@@ -12,17 +12,22 @@ export const AppDataSource = new DataSource(
       }
     : {
         type: "postgres",
-        host: "localhost",
-        port: 5432,
-
-        username: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PWD,
-        database: process.env.POSTGRES_DB,
+        url: process.env.DATABASE_URL,
+        ssl:
+          process.env.NODE_ENV === "production"
+            ? { rejectUnauthorized: false }
+            : false,
 
         synchronize: false,
         logging: true,
 
-        entities: ["src/Entities/*.ts"],
-        migrations: ["src/Migrations/*.ts"],
+        entities:
+          process.env.NODE_ENV === "production"
+            ? ["dist/src/Entities/*.js"]
+            : ["src/Entities/*.ts"],
+        migrations:
+          process.env.NODE_ENV === "production"
+            ? ["dist/src/Migrations/*.js"]
+            : ["src/Migrations/*.ts"],
       }
 )
