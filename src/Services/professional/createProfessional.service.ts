@@ -5,14 +5,11 @@ import bcrypt from "bcrypt"
 import { Professional } from "../../Entities/professional.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
 import { Hospital } from "../../Entities/hospital.entity"
-import { Schedule } from "../../Entities/schedules.entity"
 
 const createProfessionalService = async (data: IProfessionalRequest) => {
-  const { name, email, password, CRM, service_type_id, hospital_cnpj } = data
+  const { name, email, password, CRM, serviceType, hospital_cnpj } = data
 
   const professionalRepository = AppDataSource.getRepository(Professional)
-  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
-  const hospitalRepository = AppDataSource.getRepository(Hospital)
 
   const emailAlreadyExists = await professionalRepository.findOneBy({ email })
 
@@ -20,13 +17,19 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     throw new AppError(409, "Email já está sendo utilizado!")
   }
 
+  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
+
   const getService = await serviceTypeRepository.findOneBy({
-    id: service_type_id,
+    name: serviceType.name,
+    duration: serviceType.duration,
+    price: serviceType.price,
   })
 
-  if (!getService) {
-    throw new AppError(404, "Tipo de serviço não encontrado")
-  }
+  const newService = !getService
+    ? await serviceTypeRepository.save(serviceType)
+    : getService
+
+  const hospitalRepository = AppDataSource.getRepository(Hospital)
 
   const getHospital = await hospitalRepository.findOneBy({
     cnpj: hospital_cnpj,
@@ -41,9 +44,11 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     email,
     password: bcrypt.hashSync(password, 10),
     crm: CRM,
-    serviceType: getService,
     hospital: getHospital,
+    serviceType: newService,
   })
+
+  console.log(newService)
 
   const createdProfessional = await professionalRepository.findOneBy({ email })
 
