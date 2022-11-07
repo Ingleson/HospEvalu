@@ -37,7 +37,7 @@ const createUserService = async ({
     number: address?.number,
   })
 
-  const addressData = await getAddress(address.zipCode)
+  const addressData = await getAddress(address.zipCode!)
 
   const newAddress = findAddress
     ? findAddress
@@ -60,7 +60,9 @@ const createUserService = async ({
     address: newAddress,
   })
 
-  return user
+  const newUser = await userRepository.findOneBy({ email })
+
+  return newUser!
 }
 
 export default createUserService

@@ -11,7 +11,7 @@ import { User } from "./user.entity"
 @Entity("address")
 export class Address {
   @PrimaryGeneratedColumn("uuid")
-  id: string
+  readonly id: string
 
   @Column()
   state: string
