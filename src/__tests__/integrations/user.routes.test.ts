@@ -2,6 +2,8 @@ import request from 'supertest'
 import { DataSource } from 'typeorm'
 import app from '../../app'
 import { AppDataSource } from '../../data-source'
+import { IHospitalRequest } from '../../Interfaces/hospital'
+import { IProfessionalRequest } from '../../Interfaces/Professional'
 import { IUserRequest, IUserWithOutPasswordRequest } from '../../Interfaces/users'
 import { IUserLogin } from '../../Interfaces/users'
 
@@ -18,6 +20,19 @@ const userAdminData: IUserRequest = {
         hood: "Capitão Gomes",
         zipCode: "14565245"
     }
+}
+
+const hospitalData: IHospitalRequest = {
+	name: "São Judas",
+	cnpj: "78.014.887/0001-64",
+	address: {
+		state: "MG",
+		city: "Divinopolis",
+		hood: "Centro",
+		complement: "Prédio",
+		zipCode: "12345-678",
+		number: 100
+	}
 }
 
 const userNotAdminData: IUserRequest = {
@@ -75,6 +90,19 @@ const newDataUserNotAdmin: any = {
         zipCode: "154222554",
         number: 525
     }
+}
+
+const profissionalData: IProfessionalRequest = {
+    name: "Teste",
+    email: "teste@kenzie.com",
+    password: "123456",
+    CRM: "CRM/RJ 123456",
+	serviceType: {
+		name: "Fisioterapeuta",
+		price: 89,
+		duration: "60 minutos"
+	},
+	hospital_cnpj: "78.014.887/0001-64"
 }
 
 
@@ -216,6 +244,26 @@ describe('Testando rotas de usuário', ()=> {
         expect(resultAdmin.status).toBe(200)
         expect(resultAdmin.body).toHaveProperty('id')
         expect(resultAdmin.body).not.toHaveProperty('password')
+    })
+
+    test('PATCH /profissional/activate/:id -> Deve ser capaz o administrador tornar um profissional ativo', async ()=> {
+
+        const resultLoginAdmin = await request(app).post('/login/user').send({
+            email: userAdminData.email,
+            password: userAdminData.password
+        })
+
+        const resultHospital = await request(app).post('/hospital').send(hospitalData).set('Authorization', `Bearer ${resultLoginAdmin.body.token}`)
+
+        const resultLoginProfissional = await request(app).post('/professional').send(profissionalData)
+
+
+        const result = await request(app).patch(`/professional/activate/${resultLoginProfissional.body.id}`).set('Authorization', `Bearer ${resultLoginAdmin.body.token}`)
+
+        console.log(resultLoginProfissional.body, result.body)
+
+        expect(result.status).toBe(202)
+        expect(result.body).toHaveProperty('message')
     })
 
 })

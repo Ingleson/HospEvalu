@@ -17,6 +17,7 @@ const createScheduleService = async ({
     const scheduleRepository = AppDataSource.getRepository(Schedule)
     const userRepository = AppDataSource.getRepository(User)
     const professionalRepository = AppDataSource.getRepository(Professional)
+    const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
 
     const findUser = await userRepository.findOneBy({
         id: userId
@@ -59,7 +60,10 @@ const createScheduleService = async ({
     newSchedule.serviceType = newServiceType
     newSchedule.professional = findProfessional
     newSchedule.user = findUser
-    
+
+    serviceTypeRepository.create(newServiceType)
+    await serviceTypeRepository.save(newServiceType)
+
     scheduleRepository.create(newSchedule)
     await scheduleRepository.save(newSchedule)
 
