@@ -1,111 +1,171 @@
+import exp from "constants";
+import { response } from "express";
+import request from "supertest";
 import { DataSource } from "typeorm";
-import { AppDataSource } from "../../data-source";
-
-import request  from "supertest";
-import { IHospitalRequest } from "../../Interfaces/hospital";
 import app from "../../app";
-import { userAdminData, userNotAdminData } from "./user.routes.test";
+import { AppDataSource } from "../../data-source";
+import { IHospitalRequest } from "../../Interfaces/hospital";
+import { IUserLogin, IUserRequest } from "../../Interfaces/users";
 
-export const hospitalData: IHospitalRequest = {
-    name: 'Hospital Santa Casa',
-    cnpj: '04075963124787',
-    address: {
-        state: 'DF',
-        city: 'Brasília',
-        hood: 'Plano Piloto',
-        complement: 'Prédio Pátio Brasil',
-        zipCode: '72000000',
-        number: 244
-    }
+const userAdminData: IUserRequest = {
+  name: "Ingleson",
+  email: "Ingleson@kenzie.com",
+  password: "1234",
+  isAdm: true,
+  address: {
+    city: "Manaus",
+    state: "AM",
+    complement: "Casa",
+    number: 109,
+    hood: "Monte Sião",
+    zipCode: "69099212"
+  }
+}
+const userData: IUserRequest = {
+  name: "Ingleson",
+  email: "Noselgni@kenzie.com",
+  password: "123456",
+  isAdm: false,
+  address: {
+    city: "Manaus",
+    state: "AM",
+    complement: "Casa",
+    number: 109,
+    hood: "Monte Sião",
+    zipCode: "69099212"
+  }
 }
 
-let tokenInvalid: string = ''
+const adminLogin: IUserLogin = {
+  email: "Ingleson@kenzie.com",
+  password: "1234"
+};
 
-describe("Teste rota Hospital", () => {
+const hospitalData: IHospitalRequest = {
+  name: "Platão Araujo",
+  cnpj: "00697295009072",
+  address: {
+    state: "AM",
+    city: "Manaus",
+    hood: "Av. Autaz Mirim",
+    complement: 'Posto de saúde',
+    zipCode: '69063492',
+    number: 109
+  }
+}
 
-    let connection: DataSource
+describe('Testando rotas de hospital', () => {
+  let connection: DataSource
 
-    beforeAll(async () => {
-        await AppDataSource.initialize().then(res => {
-            connection = res
-        }).catch(err => {
-            console.error(err)
-        })
-    })
+  beforeAll(async () => {
+    await AppDataSource.initialize().then(res => {
+      connection = res;
+    }).catch(err => {
+      console.log(err);
+    }); 
 
-    afterAll(async () => {
-        await connection.destroy()
-    })
+    await request(app).post('/user').send(userData);
+    await request(app).post('/user').send(userAdminData);
+  });
 
-    test("POST /hospital -> Deve ser capaz de criar um novo hospital", async () => {
-        await request(app).post('/user').send(userAdminData)
-        const adminResponse = await request(app).post('/login/user').send(userAdminData)
-        const hospitalCreate = await request(app).post("/hospital").set('Authorization', `Bearer ${adminResponse.body.token}`).send(hospitalData)
+  afterAll( async() => {
+    await connection.destroy();
+  });
 
-        expect(hospitalCreate.status).toBe(201)
-        expect(hospitalCreate.body).toHaveProperty('id')
-    })
+  test('POST /hospital -> Deve ser capaz de criar um novo hospital', async() => {
 
-    test("POST /hospital -> Não deve ser capaz de criar novo hospital porque usuário não é ADM", async () => {
-        await (await request(app).post('/user').send(userNotAdminData))
-        const notAdminResponse = await request(app).post('/login/user').send(userNotAdminData)
-        const hospitalCreate = await request(app).post("/hospital").set("Authorization", `Bearer ${notAdminResponse.body.token}`).send(hospitalData)
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const response = await request(app).post('/hospital').set('Authorization', `Bearer ${adminLoginResponse.body.token}`).send(hospitalData);
+    
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id")
+    expect(response.body).toHaveProperty("cnpj")
+  })
 
-        expect(hospitalCreate.status).toBe(401)
-    })
+  test('POST /hospital -> Não deve ser capaz de criar cnpj que já existe', async() => {
 
-    test("GET /hospital -> Deve ser capaz de listar todos os hospitais", async () => {
-        await request(app).post("/user").send(userAdminData)
-        const adminResponse = await request(app).post("/login/user").send(userAdminData)
-        const listAllHospital = await request(app).get("/hospital").set('Authorization', `Bearer ${adminResponse.body.token}`)
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const response = await request(app).post('/hospital').set('Authorization', `Bearer ${adminLoginResponse.body.token}`).send(hospitalData);
 
-        expect(listAllHospital.status).toBe(200)
-    })
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(400)
+  })
 
-    test("GET /hospital -> Não deve ser capaz de listar todos os hospitais por falta do TOKEN", async () => {
-        const listAllHospital = await request(app).get("/hospital").set('Authorization', `Bearer ${tokenInvalid}`)
+  test('POST /hospital -> Não deve conseguir criar um novo hospital sem autorização', async() => {
 
-        expect(listAllHospital.status).toBe(401)
-    })
+    const response = await request(app).post('/hospital').send(hospitalData);
 
-    test("DELETE /hospital -> Não deve ser capaz de deletar um hospital, token invalido", async () => {
-        await request(app).post("/user").send(userNotAdminData)
-        const adminResponse = await request(app).post("/login/user").send(userNotAdminData)
-        
-        await request(app).post("/hospital").set('Authorization', `Bearer ${adminResponse.body.token}`).send(hospitalData)
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(401)
+  })
 
-        const UserTobeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminResponse.body.token}`)
+  test('POST /hospital -> Não deve conseguir criar um hospital sem ser administrador',async() => {
 
-        const deleteHospital = await request(app).delete(`/hospital/${UserTobeDeleted.body[0].id}`).set("Authorization", `Bearer ${tokenInvalid}`)
+    const adminLoginResponse = await request(app).post('/login/user').send(userData);
+    const response = await request(app).post('/hospital').set('Authorization', `Bearer ${adminLoginResponse.body.token}`).send(hospitalData);
 
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(401)
+  })
 
-        expect(deleteHospital.status).toBe(401)
-    })
+  test('GET /hospital -> Deve ser capaz de listar todos os hospitais', async() => {
 
-    test("DELETE /hospital -> Não deve ser capaz de deletar um hospital, não é ADM", async () => {
-        await request(app).post("/user").send(userNotAdminData)
-        const adminResponse = await request(app).post("/login/user").send(userNotAdminData)
-        
-        await request(app).post("/hospital").set('Authorization', `Bearer ${adminResponse.body.token}`).send(hospitalData)
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const response = await request(app).get('/hospital').set('Authorization', `Bearer ${adminLoginResponse.body.token}`)
 
-        const UserTobeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminResponse.body.token}`)
+    expect(response.body).toHaveLength(1)
+    expect(response.status).toBe(200)
+  })
 
-        const deleteHospital = await request(app).delete(`/hospital/${UserTobeDeleted.body[0].id}`).set("Authorization", `Bearer ${adminResponse.body.token}`)
+  test('GET /hospital -> Não deve ser capaz de listar todos os hospitais sem autorização', async() => {
+    
+    const response = await request(app).get('/hospital')
 
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(401)
+  })
 
-        expect(deleteHospital.status).toBe(401)
-    })
+  test('DELETE /hospital/:id -> Não deve ser capaz de deletar hospitais sem autorização', async() => {
 
-    test("DELETE /hospital -> Deve ser capaz de deletar um hospital", async () => {
-        await request(app).post("/user").send(userAdminData)
-        const adminResponse = await request(app).post("/login/user").send(userAdminData)
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const hospitalToBeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
 
-        const UserTobeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminResponse.body.token}`)
+    const response = await request(app).delete(`/hospital/${hospitalToBeDeleted.body[0].id}`)
 
-        const deleteHospital = await request(app).delete(`/hospital/${UserTobeDeleted.body[0].id}`).set("Authorization", `Bearer ${adminResponse.body.token}`)
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(401)
+  })
 
+  test('DELETE /hospital/:id -> Não deve ser capaz de deleter hospitais sem ser Administrador', async() => {
+  
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const userLoginResponse = await request(app).post('/login/user').send(userData);
+    const hospitalToBeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
 
-        expect(deleteHospital.status).toBe(202)
-    })
+    const response = await request(app).delete(`/hospital/${hospitalToBeDeleted.body[0].id}`).set("Authorization", `Bearer ${userLoginResponse.body.token}`)
 
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(401)
+  })
+
+  test('DELETE /hospital/:id -> Não deve ser capaz de deletar hospital com id inválido', async() => {
+    await request(app).post('/user').send(userAdminData);
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const response = await request(app).delete(`/hospital/13970660-5dbe-423a-9a9d-5c23b37943cf`).set('Authorization', `Bearer ${adminLoginResponse.body.token}`)
+    
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(404)
+  })
+
+  test('DELETE /hospital/:id -> Deve ser capaz de deleter hospital', async() => {
+    
+    await request(app).post('/user').send(userAdminData);
+    const adminLoginResponse = await request(app).post('/login/user').send(adminLogin);
+    const hospitalToBeDeleted = await request(app).get('/hospital').set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+    
+    const response = await request(app).delete(`/hospital/${hospitalToBeDeleted.body[0].id}`).set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+    
+    expect(response.body).toBeDefined()
+    expect(response.status).toBe(204)
+  })
 })
