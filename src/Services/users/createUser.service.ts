@@ -4,6 +4,7 @@ import { hash } from "bcrypt"
 import { User } from "../../Entities/user.entity"
 import { Address } from "../../Entities/address.entity"
 import { AppError } from "../../Error/appError"
+import getAddress from "../../Utils/viaCep"
 
 const createUserService = async ({
   name,
@@ -15,21 +16,12 @@ const createUserService = async ({
   const userRepository = AppDataSource.getRepository(User)
   const addressRepository = AppDataSource.getRepository(Address)
 
-  if(!password){
+  if (!password) {
     throw new AppError(400, "Senha requerida")
-}
+  }
 
-  if(!name || !email || isAdm === undefined || !address){
+  if (!name || !email || isAdm === undefined || !address) {
     throw new AppError(400, "Está faltando dados")
-}
-
-  const findAddress = await addressRepository.findOneBy({
-    zipCode: address?.zipCode,
-    number: address?.number,
-  })
-
-  if (!findAddress && address) {
-    await addressRepository.save(address)
   }
 
   const findUser = await userRepository.findOneBy({
@@ -40,17 +32,33 @@ const createUserService = async ({
     throw new AppError(400, "Usuário já existente")
   }
 
+  const findAddress = await addressRepository.findOneBy({
+    zipCode: address?.zipCode,
+    number: address?.number,
+  })
+
+  const addressData = await getAddress(address.zipCode)
+
+  const newAddress = findAddress
+    ? findAddress
+    : await addressRepository.save({
+        zipCode: addressData.cep,
+        city: addressData.localidade,
+        state: addressData.uf,
+        hood: addressData.bairro,
+        number: address.number,
+        complement: address.complement || addressData.complemento,
+      })
+
   const hashedPassword = await hash(password, 10)
 
-  const user = userRepository.create({
+  const user = await userRepository.save({
     name,
     email,
     password: hashedPassword,
     isAdm,
-    address: findAddress ? findAddress : address,
+    address: newAddress,
   })
-
-  await userRepository.save(user)
 
   return user
 }
