@@ -4,6 +4,7 @@ import { ILoggedUser, IUser, IAddressUpdate } from "../../Interfaces/users"
 import { User } from "../../Entities/user.entity"
 import { AppError } from "../../Error/appError"
 import { Address } from "../../Entities/address.entity"
+import getAddress from "../../Utils/viaCep"
 
 const updateUserService = async (
   name: string,
@@ -34,15 +35,9 @@ const updateUserService = async (
     }
   }
 
-  const findAddress = await addressRepository.findOneBy({
-    id: findUser.address.id,
-  })
-
   if (loggedUser.isAdm === false && id !== loggedUser.id) {
     throw new AppError(401, "Sem permissão")
   }
-
-  const idAddress = findAddress?.id
 
   if (password && compareSync(password, findUser.password)) {
     throw new AppError(409, "Utilize uma senha diferente")
@@ -50,12 +45,20 @@ const updateUserService = async (
 
   const hashedPassword = password && (await hash(password, 10))
 
+  const findAddress = await addressRepository.findOneBy({
+    id: findUser.address.id,
+  })
+
+  const idAddress = findAddress?.id
+
+  const newAddress = address && (await getAddress(address.zipCode!))
+
   await addressRepository.update(idAddress!, {
-    state: address?.state || findAddress?.state,
-    city: address?.city || findAddress?.city,
-    hood: address?.hood || findAddress?.hood,
-    complement: address?.complement || findAddress?.complement,
-    zipCode: address?.zipCode || findAddress?.zipCode,
+    state: address ? newAddress.uf : findAddress?.state,
+    city: address ? newAddress.localidade : findAddress?.city,
+    hood: address ? newAddress.bairro : findAddress?.hood,
+    complement: address ? newAddress.complemento : findAddress?.complement,
+    zipCode: address ? newAddress.cep : findAddress?.zipCode,
     number: address?.number || findAddress?.number,
   })
 
