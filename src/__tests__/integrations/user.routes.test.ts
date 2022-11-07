@@ -5,7 +5,7 @@ import { AppDataSource } from '../../data-source'
 import { IUserRequest, IUserWithOutPasswordRequest } from '../../Interfaces/users'
 import { IUserLogin } from '../../Interfaces/users'
 
-const userAdminData: IUserRequest = {
+export const userAdminData: IUserRequest = {
     name: "Lucas",
     email: "lucas@kenzie.com",
     password: "123456",
@@ -20,7 +20,7 @@ const userAdminData: IUserRequest = {
     }
 }
 
-const userNotAdminData: IUserRequest = {
+export const userNotAdminData: IUserRequest = {
     name: 'Breno',
     email: 'breno@kenzie.com',
     password: '123456',
