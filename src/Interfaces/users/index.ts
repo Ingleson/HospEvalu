@@ -1,7 +1,4 @@
 export interface IAddressUpdate {
-  state?: string
-  city?: string
-  hood?: string
   complement?: string
   zipCode?: string
   number?: number
