@@ -45,7 +45,7 @@ export class Professional {
   @OneToMany((type) => Comment, (comment) => comment.professional)
   comments: Comment[]
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule.professional, {
+  @OneToMany((type) => Schedule, (schedule) => schedule.professional, {
     eager: true,
   })
   @JoinTable()

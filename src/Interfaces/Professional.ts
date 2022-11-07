@@ -5,6 +5,13 @@ export interface IServiceType {
   duration: string
 }
 
+export interface IServiceTestType {
+  id?: string
+  name: string
+  price: number
+  duration: string
+}
+
 export interface IServiceTypeRequest {
   name: string
   price: number
@@ -29,7 +36,7 @@ export interface IProfessionalRequest {
   email: string
   password: string
   CRM: string
-  serviceType: IServiceType
+  serviceType: IServiceTestType
   hospital_cnpj: string
 }
 

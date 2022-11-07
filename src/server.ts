@@ -1,6 +1,5 @@
 import app from "./app"
 import { AppDataSource } from "./data-source"
-
 ;(async () => {
   await AppDataSource.initialize()
     .then(() => {
@@ -10,7 +9,7 @@ import { AppDataSource } from "./data-source"
       console.error("Error during Data Source initialization", err)
     })
 
-  app.listen(process.env.PORT || 3000, () => {
+  app.listen(process.env.PORT || 3001, () => {
     console.log(`Server running at port ${process.env.PORT || 3000}`)
   })
 })()

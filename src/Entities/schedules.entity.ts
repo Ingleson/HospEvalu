@@ -5,7 +5,9 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from "typeorm"
 import { v4 as uuid } from "uuid"
 import { Professional } from "./professional.entity"
@@ -14,7 +16,7 @@ import { User } from "./user.entity"
 
 @Entity("schedules")
 export class Schedule {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   readonly id: string
 
   @Column()
@@ -28,14 +30,13 @@ export class Schedule {
   })
   description: string
 
-  @ManyToMany((type) => User, (user) => user.id)
-  
+  @ManyToOne((type) => User, (user) => user)
   user: User
 
-  @ManyToMany((type) => Professional, (professional) => professional.id)
+  @ManyToOne((type) => Professional, (professional) => professional)
   professional: Professional
 
-  @ManyToOne((type) => ServiceType, (serviceType) => serviceType.id)
+  @ManyToOne((type) => ServiceType, (serviceType) => serviceType)
   serviceType: ServiceType
 
   constructor() {

@@ -13,12 +13,18 @@ export interface IAddress {
   number: number
 }
 
+export interface IAddressRequest {
+  complement?: string
+  zipCode?: string
+  number?: number
+}
+
 export interface IUserRequest {
   name: string
   email: string
   password: string
   isAdm: boolean
-  address?: IAddress
+  address?: IAddressRequest
 }
 
 export interface IUserWithOutPasswordRequest {
