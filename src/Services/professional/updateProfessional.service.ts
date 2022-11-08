@@ -49,8 +49,6 @@ const updateProfessionalService = async (
     ? getService
     : await serviceTypeRepository.save(serviceType)
 
-  console.log(service)
-
   if (
     password &&
     bcrypt.compareSync(password, professionalToBeUpdated.password)

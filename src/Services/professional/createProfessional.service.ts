@@ -48,8 +48,6 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     serviceType: newService,
   })
 
-  console.log(newService)
-
   const createdProfessional = await professionalRepository.findOneBy({ email })
 
   return createdProfessional

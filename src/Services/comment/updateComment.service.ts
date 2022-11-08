@@ -3,20 +3,20 @@ import { Comment } from "../../Entities/comment.entity"
 import { AppError } from "../../Error/appError"
 import { ICommentUpdate } from "../../Interfaces/comment"
 
-const updateCommentService = async ({ userId, content }: ICommentUpdate) => {
+const updateCommentService = async ({ commentId, content }: ICommentUpdate) => {
   const commentRepository = AppDataSource.getRepository(Comment)
 
   const comment: Comment | null = await commentRepository.findOneBy({
-    id: userId,
+    id: commentId,
   })
 
   if (!comment) {
     throw new AppError(404, "Comment not found")
   }
 
-  await commentRepository.update(userId, { content: content })
+  await commentRepository.update(commentId, { content: content })
 
-  const commentUp = await commentRepository.findOneBy({ id: userId })
+  const commentUp = await commentRepository.findOneBy({ id: commentId })
 
   return commentUp
 }

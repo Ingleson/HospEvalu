@@ -10,7 +10,7 @@ export interface ICommentDelete{
 }
 
 export interface ICommentUpdate{
-  userId: string,
+  commentId: string,
   professionalId?: string,
   content: string
 }
