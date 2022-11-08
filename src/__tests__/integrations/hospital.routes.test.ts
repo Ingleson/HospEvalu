@@ -81,6 +81,19 @@ describe("Testando rotas de hospital", () => {
 
   test("POST /hospital -> Não deve ser capaz de criar cnpj que já existe", async () => {
     const adminLoginResponse = await request(app)
+    .post("/login/user")
+    .send(adminLogin)
+    const response = await request(app)
+    .post("/hospital")
+    .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+    .send(hospitalData)
+    
+    expect(response.body).toHaveProperty("message")
+    expect(response.status).toBe(400)
+  })
+  
+  test("POST /hospital -> Não deve ser capaz de criar endereço que já existe", async () => {
+    const adminLoginResponse = await request(app)
       .post("/login/user")
       .send(adminLogin)
     const response = await request(app)
@@ -88,8 +101,8 @@ describe("Testando rotas de hospital", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(hospitalData)
 
-    expect(response.body).toHaveProperty("message")
-    expect(response.status).toBe(400)
+      expect(response.body).toHaveProperty("message")
+      expect(response.status).toBe(400)
   })
 
   test("POST /hospital -> Não deve conseguir criar um novo hospital sem autorização", async () => {
