@@ -20,15 +20,15 @@ export const createCommentService = async (
   })
 
   if (!findUser) {
-    throw new AppError(404, "user not found")
+    throw new AppError(401, "user not found")
   }
 
   if (!findProfessional) {
-    throw new AppError(404, "professional not found")
+    throw new AppError(402, "professional not found")
   }
 
   if (content.length < 1) {
-    throw new AppError(404, "To do a comment")
+    throw new AppError(403, "To do a comment")
   }
 
   const newComment = commentRepository.create({

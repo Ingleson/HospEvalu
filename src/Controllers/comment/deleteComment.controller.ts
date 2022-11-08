@@ -7,7 +7,7 @@ const deleteCommentController = async (req: Request, res: Response) => {
 
     await deleteCommentService(id)
 
-    return res.status(204).send()
+    return res.status(200).send({message:  "Comentário deletado com sucesso"})
 }
 
 export default deleteCommentController
