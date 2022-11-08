@@ -59,7 +59,21 @@ const createScheduleService = async ({
   serviceTypeRepository.create(newServiceType)
   await serviceTypeRepository.save(newServiceType)
 
-  const teste = await scheduleRepository.save({
+  serviceTypeRepository.create(newServiceType)
+  await serviceTypeRepository.save(newServiceType)
+
+  const newSchedule = new Schedule()
+  newSchedule.day = newDay
+  newSchedule.hour = hour
+  newSchedule.description = description
+  newSchedule.serviceType = newServiceType
+  newSchedule.professional = findProfessional
+  newSchedule.user = findUser
+
+  scheduleRepository.create(newSchedule)
+  await scheduleRepository.save(newSchedule)
+
+  const createdSchedule = await scheduleRepository.save({
     day: newDay,
     hour: hour,
     description: description,
@@ -72,7 +86,7 @@ const createScheduleService = async ({
   //   id: newSchedule.id,
   // })
 
-  return teste
+  return createdSchedule
 }
 
 export default createScheduleService
