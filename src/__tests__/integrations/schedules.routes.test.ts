@@ -150,6 +150,7 @@ describe("Testando rotas de agendamento", () => {
       .delete(`/schedules/${schedulesId}`)
       .set("Authorization", `Bearer ${tokenUser}`)
 
-    expect(result.status).toBe(204)
+    expect(result.status).toBe(200)
+    expect(result.body).toMatchObject({message: "Agendamento deletado com sucesso"})
   })
 })

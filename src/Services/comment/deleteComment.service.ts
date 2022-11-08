@@ -9,7 +9,7 @@ const deleteCommentService = async (id:string) => {
     const comment:Comment | null = await commentRepository.findOneBy({ id: id })
     
     if (!comment) {
-        throw new AppError(404, 'Comment not found!')
+        throw new AppError(404, 'Comentário não encontrado')
     }
 
     commentRepository.delete(comment)
