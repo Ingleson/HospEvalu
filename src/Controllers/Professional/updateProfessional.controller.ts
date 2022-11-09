@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { AppError, handleError } from "../../Error/appError"
+import { instanceToPlain } from "class-transformer"
 import updateProfessionalService from "../../Services/professional/updateProfessional.service"
 
 const updateProfessionalController = async (req: Request, res: Response) => {
@@ -9,7 +9,7 @@ const updateProfessionalController = async (req: Request, res: Response) => {
 
   const updatedProfessional = await updateProfessionalService(data, user, id)
 
-  return res.json(updatedProfessional)
+  return res.json(instanceToPlain(updatedProfessional))
 }
 
 export default updateProfessionalController

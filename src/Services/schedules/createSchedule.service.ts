@@ -27,9 +27,12 @@ const createScheduleService = async ({
     throw new AppError(404, "Usuário não encontrado")
   }
 
-  const findProfessional = await professionalRepository.findOneBy({
-    id: professionnalId,
+  const findProfessional = await professionalRepository.findOne({
+    where: {      
+      id: professionnalId,
+    }
   })
+  
 
   if (!findProfessional) {
     throw new AppError(404, "Profissional não encontrado")

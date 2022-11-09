@@ -19,6 +19,7 @@ export const createCommentService = async (
     id: professionalId,
   })
 
+
   if (!findUser) {
     throw new AppError(401, "user not found")
   }
@@ -33,7 +34,7 @@ export const createCommentService = async (
 
   const newComment = commentRepository.create({
     user: { id: userId },
-    professional: { id: professionalId },
+    professional: { id: findProfessional.id },
     content,
   })
 

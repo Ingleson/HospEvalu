@@ -1,3 +1,5 @@
+import { IHospitalRequest } from "./hospital"
+
 export interface IServiceType {
   id: string
   name: string
@@ -37,13 +39,13 @@ export interface IProfessionalRequest {
   password: string
   CRM: string
   serviceType: IServiceTestType
-  hospital_cnpj: string
+  cnpj?: string
 }
 
 export interface IProfessionalUpdate {
-  name: string
-  email: string
-  password: string
-  serviceType: IServiceType
-  hospital_cnpj: string
+  name?: string
+  email?: string
+  password?: string
+  serviceType?: IServiceType
+  cnpj?: string
 }
