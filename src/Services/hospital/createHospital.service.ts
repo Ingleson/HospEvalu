@@ -16,6 +16,7 @@ export const createHospitalService = async ({
   const findAddress = await addressRepository.findOneBy({
     zipCode: address.zipCode,
     number: address.number,
+    complement: address.complement
   })
 
   if (findAddress) {
