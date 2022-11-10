@@ -56,7 +56,7 @@ const profissionalData: IProfessionalRequest = {
     price: 89,
     duration: "60 minutos",
   },
-  hospital_cnpj: "78.014.887/0001-64",
+  cnpj: "78.014.887/0001-64",
 }
 
 let createdSchedules: any = []
