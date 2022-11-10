@@ -7,7 +7,7 @@ import { ServiceType } from "../../Entities/serviceType.entity"
 import { Hospital } from "../../Entities/hospital.entity"
 
 const createProfessionalService = async (data: IProfessionalRequest) => {
-  const { name, email, password, CRM, serviceType, hospital_cnpj } = data
+  const { name, email, password, CRM, serviceType, cnpj } = data
 
   const professionalRepository = AppDataSource.getRepository(Professional)
 
@@ -31,12 +31,17 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
 
   const hospitalRepository = AppDataSource.getRepository(Hospital)
 
+
+  if (!cnpj) {
+    throw new AppError(404, "CNPJ do Hospital não enviado")
+  }
+
   const getHospital = await hospitalRepository.findOneBy({
-    cnpj: hospital_cnpj,
+    cnpj: cnpj,
   })
 
   if (!getHospital) {
-    throw new AppError(404, "Hospital não encontrado")
+    throw new AppError(404, "CNPJ do Hospital não encontrado")
   }
 
   await professionalRepository.save({

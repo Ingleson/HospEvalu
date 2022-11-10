@@ -13,7 +13,7 @@ const createScheduleService = async ({
   serviceType,
   userId,
   professionnalId,
-}: IScheduleRequest): Promise<ISchedule> => {
+}: IScheduleRequest) => {
   const scheduleRepository = AppDataSource.getRepository(Schedule)
   const userRepository = AppDataSource.getRepository(User)
   const professionalRepository = AppDataSource.getRepository(Professional)
@@ -27,9 +27,12 @@ const createScheduleService = async ({
     throw new AppError(404, "Usuário não encontrado")
   }
 
-  const findProfessional = await professionalRepository.findOneBy({
-    id: professionnalId,
+  const findProfessional = await professionalRepository.findOne({
+    where: {      
+      id: professionnalId,
+    }
   })
+  
 
   if (!findProfessional) {
     throw new AppError(404, "Profissional não encontrado")
@@ -82,11 +85,16 @@ const createScheduleService = async ({
     user: findUser,
   })
 
-  // const createdSchedule = await scheduleRepository.findOneBy({
-  //   id: newSchedule.id,
-  // })
+  const savedSchedule = {
+    day: newDay,
+    hour: hour,
+    description: description,
+    serviceType: newServiceType,
+    professional: { id: findProfessional.id, name: findProfessional.name },
+    user: { id: findUser.id, name: findUser.name },
+  }
 
-  return createdSchedule
+  return savedSchedule
 }
 
 export default createScheduleService

@@ -25,8 +25,8 @@ export interface ISchedule{
 }
 
 export interface IScheduleUpdate{
-    day: string
-    hour: string
-    description: string
+    day?: string
+    hour?: string
+    description?: string
     id: string
 }
