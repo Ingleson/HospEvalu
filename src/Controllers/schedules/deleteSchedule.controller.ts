@@ -9,7 +9,7 @@ const deleteScheduleController = async (req: Request, res: Response) => {
         const deleted = await deleteScheduleService(id)
 
         if(deleted){
-            return res.status(204).send("Usuário deletado com sucesso")
+            return res.status(200).send({message: "Agendamento deletado com sucesso"})
         }
     } catch (error) {
         if(error instanceof AppError) {

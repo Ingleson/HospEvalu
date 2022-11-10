@@ -1,7 +1,29 @@
+import { IHospitalRequest } from "./hospital"
+
+export interface IServiceType {
+  id: string
+  name: string
+  price: number
+  duration: string
+}
+
+export interface IServiceTestType {
+  id?: string
+  name: string
+  price: number
+  duration: string
+}
+
+export interface IServiceTypeRequest {
+  name: string
+  price: number
+  duration: string
+}
+
 export interface IProfessional {
   id: string
   hospital_id: string
-  service_type_id: string
+  serviceType: IServiceType
   email: string
   password: string
   created_at: Date
@@ -16,14 +38,14 @@ export interface IProfessionalRequest {
   email: string
   password: string
   CRM: string
-  service_type_id: string
-  hospital_cnpj: string
+  serviceType: IServiceTestType
+  cnpj?: string
 }
 
 export interface IProfessionalUpdate {
-  name: string
-  email: string
-  password: string
-  service_type_id: string
-  hospital_cnpj: string
+  name?: string
+  email?: string
+  password?: string
+  serviceType?: IServiceType
+  cnpj?: string
 }

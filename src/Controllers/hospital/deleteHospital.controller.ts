@@ -6,5 +6,5 @@ export const deleteHospitalController = async (req: Request, res: Response) => {
 
   const deletedHospital = await deleteHospitalService(id)
 
-  return res.status(202).json(deletedHospital)
+  return res.status(204).json(deletedHospital)
 }

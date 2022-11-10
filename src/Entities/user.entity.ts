@@ -49,7 +49,7 @@ export class User {
   @JoinColumn()
   address: Address
 
-  @ManyToMany((type) => Schedule, (schedule) => schedule.user, {
+  @OneToMany((type) => Schedule, (schedule) => schedule.user, {
     eager: true,
   })
   @JoinTable()

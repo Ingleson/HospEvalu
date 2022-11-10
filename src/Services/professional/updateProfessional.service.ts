@@ -1,6 +1,6 @@
 import { AppDataSource } from "../../data-source"
 import { AppError } from "../../Error/appError"
-import { IProfessionalUpdate } from "../../Interfaces/Professional"
+import { IProfessionalUpdate, IServiceTestType } from "../../Interfaces/Professional"
 import bcrypt from "bcrypt"
 import { Professional } from "../../Entities/professional.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
@@ -11,22 +11,12 @@ const updateProfessionalService = async (
   user: any,
   id: string
 ) => {
-  const { name, email, password, hospital_cnpj, service_type_id } = data
-
-  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
-
-  const getService = await serviceTypeRepository.findOneBy({
-    id: service_type_id,
-  })
-
-  if (!getService) {
-    throw new AppError(404, "Tipo de serviço não encontrado")
-  }
+  const { name, email, password, cnpj, serviceType } = data
 
   const hospitalRepository = AppDataSource.getRepository(Hospital)
 
   const getHospital = await hospitalRepository.findOneBy({
-    cnpj: hospital_cnpj,
+    cnpj: cnpj,
   })
 
   if (!getHospital) {
@@ -47,6 +37,13 @@ const updateProfessionalService = async (
     throw new AppError(403, "Sem autorização")
   }
 
+  const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
+
+  const idService: ServiceType = professionalToBeUpdated.serviceType
+
+
+  const getService = serviceType ? await serviceTypeRepository.save(serviceType) : professionalToBeUpdated.serviceType
+
   if (
     password &&
     bcrypt.compareSync(password, professionalToBeUpdated.password)
@@ -54,17 +51,19 @@ const updateProfessionalService = async (
     throw new AppError(409, "Digite uma senha diferente da atual")
   }
 
-  const newPassword = bcrypt.hashSync(password, 10)
+  const newPassword = password && bcrypt.hashSync(password, 10)
 
-  professionalRepository.update(professionalToBeUpdated.id, {
-    name: name || professionalToBeUpdated.name,
-    email: email || professionalToBeUpdated.email,
-    password: newPassword || professionalToBeUpdated.password,
-    hospital: getHospital || professionalToBeUpdated.hospital,
-    serviceType: getService || professionalToBeUpdated.serviceType,
+  await professionalRepository.update(id, {
+    name: name ? name: professionalToBeUpdated.name,
+    email: email ? email : professionalToBeUpdated.email,
+    password: password ? newPassword : professionalToBeUpdated.password,
+    hospital: cnpj? getHospital : professionalToBeUpdated.hospital,
+    serviceType: getService!, 
   })
 
-  return { message: "usuario atualizado" }
+  const updatedProfessional = professionalRepository.findOneBy({ id })
+
+  return updatedProfessional
 }
 
 export default updateProfessionalService

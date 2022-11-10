@@ -1,7 +1,4 @@
 export interface IAddressUpdate {
-  state?: string
-  city?: string
-  hood?: string
   complement?: string
   zipCode?: string
   number?: number
@@ -16,12 +13,18 @@ export interface IAddress {
   number: number
 }
 
+export interface IAddressRequest {
+  complement?: string
+  zipCode?: string
+  number?: number
+}
+
 export interface IUserRequest {
   name: string
   email: string
   password: string
   isAdm: boolean
-  address?: IAddress
+  address?: IAddressRequest
 }
 
 export interface IUserWithOutPasswordRequest {
