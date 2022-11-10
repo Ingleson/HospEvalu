@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { v4 as uuid } from "uuid"
 import { Professional } from "./professional.entity"
 import { Schedule } from "./schedules.entity"
 

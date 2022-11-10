@@ -4,14 +4,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm"
 import { Comment } from "./comment.entity"
-import { Hospital } from "./hospital.entity"
+import { Cnpj } from "./cnpj.entity"
 import { Schedule } from "./schedules.entity"
 import { ServiceType } from "./serviceType.entity"
 
@@ -51,10 +50,10 @@ export class Professional {
   @JoinTable()
   schedules: Schedule[]
 
-  @ManyToOne((type) => Hospital, (hospital) => hospital.professional, {
+  @ManyToOne((type) => Cnpj, (cnpj) => cnpj.professional, {
     eager: true,
   })
-  hospital?: Hospital
+  cnpj?: Cnpj
 
   @ManyToOne((type) => ServiceType, (servicetype) => servicetype.professional, {
     eager: true,

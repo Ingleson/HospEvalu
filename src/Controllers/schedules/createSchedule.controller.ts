@@ -1,33 +1,21 @@
-import { Request, Response } from "express";
-import { AppError, handleError } from "../../Error/appError";
-import createScheduleService from "../../Services/schedules/createSchedule.service";
+import { Request, Response } from "express"
+import { AppError, handleError } from "../../Error/appError"
+import createScheduleService from "../../Services/schedules/createSchedule.service"
 
 const createScheduleController = async (req: Request, res: Response) => {
-    const {
-        day,
-        hour,
-        description,
-        serviceType,
-        userId,
-        professionnalId
-    } = req.body
+  const { day, hour, description, serviceType, userId, professionnalId } =
+    req.body
 
-    try {
-        const newSchedule = await createScheduleService({
-            day,
-            hour,
-            description,
-            serviceType,
-            userId,
-            professionnalId
-        })
+  const newSchedule = await createScheduleService({
+    day,
+    hour,
+    description,
+    serviceType,
+    userId,
+    professionnalId,
+  })
 
-        return res.status(201).send(newSchedule)
-    } catch (error) {
-        if(error instanceof AppError) {
-            handleError(error, res)
-        }
-    }
+  return res.status(201).send(newSchedule)
 }
 
 export default createScheduleController

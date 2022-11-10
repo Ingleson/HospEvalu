@@ -2,7 +2,7 @@ import request from "supertest"
 import { DataSource } from "typeorm"
 import app from "../../app"
 import { AppDataSource } from "../../data-source"
-import { IHospitalRequest } from "../../Interfaces/hospital"
+import { IHospitalRequest } from "../../Interfaces/cpnj"
 import { IProfessionalRequest } from "../../Interfaces/Professional"
 import {
   IUserRequest,

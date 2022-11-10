@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm"
-import { Hospital } from "./hospital.entity"
+import { Cnpj } from "./cnpj.entity"
 import { User } from "./user.entity"
 
 @Entity("address")
@@ -31,8 +31,8 @@ export class Address {
   @Column()
   number: number
 
-  @OneToOne((type) => Hospital, (hospital) => hospital.id)
-  hospital: Hospital[]
+  @OneToOne((type) => Cnpj, (cnpj) => cnpj.id)
+  cnpj: Cnpj[]
 
   @OneToMany((type) => User, (user) => user.address)
   user: User[]

@@ -2,7 +2,7 @@ import request from "supertest"
 import { DataSource } from "typeorm"
 import app from "../../app"
 import { AppDataSource } from "../../data-source"
-import { IHospitalRequest } from "../../Interfaces/hospital"
+import { IHospitalRequest } from "../../Interfaces/cpnj"
 import { IProfessionalRequest } from "../../Interfaces/Professional"
 import { IScheduleRequest } from "../../Interfaces/schedules"
 import { IUserRequest } from "../../Interfaces/users"
@@ -151,6 +151,8 @@ describe("Testando rotas de agendamento", () => {
       .set("Authorization", `Bearer ${tokenUser}`)
 
     expect(result.status).toBe(200)
-    expect(result.body).toMatchObject({message: "Agendamento deletado com sucesso"})
+    expect(result.body).toMatchObject({
+      message: "Agendamento deletado com sucesso",
+    })
   })
 })

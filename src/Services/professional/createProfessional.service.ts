@@ -4,7 +4,7 @@ import { IProfessionalRequest } from "../../Interfaces/Professional"
 import bcrypt from "bcrypt"
 import { Professional } from "../../Entities/professional.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
-import { Hospital } from "../../Entities/hospital.entity"
+import { Cnpj } from "../../Entities/cnpj.entity"
 
 const createProfessionalService = async (data: IProfessionalRequest) => {
   const { name, email, password, CRM, serviceType, cnpj } = data
@@ -29,19 +29,18 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     ? await serviceTypeRepository.save(serviceType)
     : getService
 
-  const hospitalRepository = AppDataSource.getRepository(Hospital)
-
-
   if (!cnpj) {
-    throw new AppError(404, "CNPJ do Hospital não enviado")
+    throw new AppError(404, "CNPJ não enviado")
   }
 
-  const getHospital = await hospitalRepository.findOneBy({
+  const cnpjRepository = AppDataSource.getRepository(Cnpj)
+
+  const getCnpj = await cnpjRepository.findOneBy({
     cnpj: cnpj,
   })
 
-  if (!getHospital) {
-    throw new AppError(404, "CNPJ do Hospital não encontrado")
+  if (!getCnpj) {
+    throw new AppError(404, "CNPJ não encontrado")
   }
 
   await professionalRepository.save({
@@ -49,7 +48,7 @@ const createProfessionalService = async (data: IProfessionalRequest) => {
     email,
     password: bcrypt.hashSync(password, 10),
     crm: CRM,
-    hospital: getHospital,
+    cnpj: getCnpj,
     serviceType: newService,
   })
 

@@ -9,8 +9,8 @@ import {
 import { Address } from "./address.entity"
 import { Professional } from "./professional.entity"
 
-@Entity("hospital")
-export class Hospital {
+@Entity("cnpj")
+export class Cnpj {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string
 
@@ -20,7 +20,10 @@ export class Hospital {
   @Column({ unique: true })
   cnpj: string
 
-  @OneToOne((type) => Address, (address) => address.hospital, {
+  @Column({default: false})
+  is_active: boolean
+
+  @OneToOne((type) => Address, (address) => address.cnpj, {
     eager: true,
   })
   @JoinColumn()

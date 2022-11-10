@@ -1,4 +1,3 @@
-import { IProfessional } from "../Professional"
 import { IUser } from "../users"
 
 export interface IServiceType{

@@ -1,6 +1,6 @@
 import { Express } from "express"
 import { commentRoutes } from "./comments.routes"
-import { hospitalRoutes } from "./hospital.routes"
+import { cnpjRoutes } from "./cnpj.routes"
 import professionalRoutes from "./professional.routes"
 import { scheduleRoutes } from "./schedules.routes"
 import sessionRoutes from "./session.routes"
@@ -10,7 +10,7 @@ const appRoutes = (app: Express) => {
   app.use("/login", sessionRoutes)
   app.use("/user", userRoutes)
   app.use("/professional", professionalRoutes)
-  app.use("/hospital", hospitalRoutes)
+  app.use("/cnpj", cnpjRoutes)
   app.use("/schedules", scheduleRoutes)
   app.use("/comment", commentRoutes)
 }

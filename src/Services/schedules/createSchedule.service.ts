@@ -4,7 +4,7 @@ import { Schedule } from "../../Entities/schedules.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
 import { User } from "../../Entities/user.entity"
 import { AppError } from "../../Error/appError"
-import { ISchedule, IScheduleRequest } from "../../Interfaces/schedules"
+import { IScheduleRequest } from "../../Interfaces/schedules"
 
 const createScheduleService = async ({
   day,
@@ -28,11 +28,10 @@ const createScheduleService = async ({
   }
 
   const findProfessional = await professionalRepository.findOne({
-    where: {      
+    where: {
       id: professionnalId,
-    }
+    },
   })
-  
 
   if (!findProfessional) {
     throw new AppError(404, "Profissional não encontrado")
@@ -65,17 +64,6 @@ const createScheduleService = async ({
   serviceTypeRepository.create(newServiceType)
   await serviceTypeRepository.save(newServiceType)
 
-  const newSchedule = new Schedule()
-  newSchedule.day = newDay
-  newSchedule.hour = hour
-  newSchedule.description = description
-  newSchedule.serviceType = newServiceType
-  newSchedule.professional = findProfessional
-  newSchedule.user = findUser
-
-  scheduleRepository.create(newSchedule)
-  await scheduleRepository.save(newSchedule)
-
   const createdSchedule = await scheduleRepository.save({
     day: newDay,
     hour: hour,
@@ -86,6 +74,7 @@ const createScheduleService = async ({
   })
 
   const savedSchedule = {
+    id: createdSchedule.id,
     day: newDay,
     hour: hour,
     description: description,

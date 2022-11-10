@@ -2,7 +2,7 @@ import request from "supertest"
 import { DataSource } from "typeorm"
 import app from "../../app"
 import { AppDataSource } from "../../data-source"
-import { IHospitalRequest } from "../../Interfaces/hospital"
+import { IHospitalRequest } from "../../Interfaces/cpnj"
 import {
   IProfessional,
   IProfessionalRequest,
@@ -35,7 +35,7 @@ const profissionalWithOutPasswordData: any = {
     price: 89,
     duration: "60 minutos",
   },
-  hospital_cnpj: "78.014.887/0001-64",
+  cnpj: "78.014.887/0001-64",
 }
 
 const professionalUpdateData: any = {
@@ -48,7 +48,7 @@ const professionalUpdateData: any = {
     price: 89,
     duration: "60 minutos",
   },
-  hospital_cnpj: "78.014.887/0001-64",
+  cnpj: "78.014.887/0001-64",
 }
 
 const userAdminData: IUserRequest = {
@@ -57,7 +57,6 @@ const userAdminData: IUserRequest = {
   password: "123456",
   isAdm: true,
   address: {
-
     complement: "Casa",
     number: 214,
     zipCode: "23087470",

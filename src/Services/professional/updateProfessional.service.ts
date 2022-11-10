@@ -1,10 +1,13 @@
 import { AppDataSource } from "../../data-source"
 import { AppError } from "../../Error/appError"
-import { IProfessionalUpdate, IServiceTestType } from "../../Interfaces/Professional"
+import {
+  IProfessionalUpdate,
+  IServiceTestType,
+} from "../../Interfaces/Professional"
 import bcrypt from "bcrypt"
 import { Professional } from "../../Entities/professional.entity"
 import { ServiceType } from "../../Entities/serviceType.entity"
-import { Hospital } from "../../Entities/hospital.entity"
+import { Cnpj } from "../../Entities/cnpj.entity"
 
 const updateProfessionalService = async (
   data: IProfessionalUpdate,
@@ -13,17 +16,17 @@ const updateProfessionalService = async (
 ) => {
   const { name, email, password, cnpj, serviceType } = data
 
-  const hospitalRepository = AppDataSource.getRepository(Hospital)
+  const cnpjRepository = AppDataSource.getRepository(Cnpj)
 
-  const getHospital = await hospitalRepository.findOneBy({
+  const getCnpj = await cnpjRepository.findOneBy({
     cnpj: cnpj,
   })
 
-  if (!getHospital) {
-    throw new AppError(404, "Hospital não encontrado")
+  if (!getCnpj) {
+    throw new AppError(404, "CNPJ não encontrado")
   }
 
-  const professionalRepository = AppDataSource.getRepository(Professional) //Importar quando as entity ficar pronta
+  const professionalRepository = AppDataSource.getRepository(Professional)
 
   const professionalToBeUpdated = await professionalRepository.findOneBy({
     id,
@@ -39,10 +42,9 @@ const updateProfessionalService = async (
 
   const serviceTypeRepository = AppDataSource.getRepository(ServiceType)
 
-  const idService: ServiceType = professionalToBeUpdated.serviceType
-
-
-  const getService = serviceType ? await serviceTypeRepository.save(serviceType) : professionalToBeUpdated.serviceType
+  const getService = serviceType
+    ? await serviceTypeRepository.save(serviceType)
+    : professionalToBeUpdated.serviceType
 
   if (
     password &&
@@ -54,11 +56,11 @@ const updateProfessionalService = async (
   const newPassword = password && bcrypt.hashSync(password, 10)
 
   await professionalRepository.update(id, {
-    name: name ? name: professionalToBeUpdated.name,
+    name: name ? name : professionalToBeUpdated.name,
     email: email ? email : professionalToBeUpdated.email,
     password: password ? newPassword : professionalToBeUpdated.password,
-    hospital: cnpj? getHospital : professionalToBeUpdated.hospital,
-    serviceType: getService!, 
+    cnpj: cnpj ? getCnpj : professionalToBeUpdated.cnpj,
+    serviceType: getService!,
   })
 
   const updatedProfessional = professionalRepository.findOneBy({ id })

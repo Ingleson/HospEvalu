@@ -1,4 +1,4 @@
-export interface IHospitalRequest {
+export interface ICnpjRequest {
   address: IAddressRequest
   name: string
   cnpj: string

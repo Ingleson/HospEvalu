@@ -1,22 +1,22 @@
 import { AppDataSource } from "../../data-source"
 import { Address } from "../../Entities/address.entity"
-import { Hospital } from "../../Entities/hospital.entity"
+import { Cnpj } from "../../Entities/cnpj.entity"
 import { AppError } from "../../Error/appError"
-import { IHospitalRequest } from "../../Interfaces/hospital"
+import { ICnpjRequest } from "../../Interfaces/cpnj"
 import getAddress from "../../Utils/viaCep"
 
-export const createHospitalService = async ({
+export const createCnpjService = async ({
   address,
   name,
   cnpj,
-}: IHospitalRequest) => {
-  const hospitalRepository = AppDataSource.getRepository(Hospital)
+}: ICnpjRequest) => {
+  const hospitalRepository = AppDataSource.getRepository(Cnpj)
   const addressRepository = AppDataSource.getRepository(Address)
 
   const findAddress = await addressRepository.findOneBy({
     zipCode: address.zipCode,
     number: address.number,
-    complement: address.complement
+    complement: address.complement,
   })
 
   if (findAddress) {
@@ -42,11 +42,11 @@ export const createHospitalService = async ({
     throw new AppError(400, "CNPJ Duplicado")
   }
 
-  const createdHospital = await hospitalRepository.save({
+  const createdCnpj = await hospitalRepository.save({
     address: newAddress,
     name,
     cnpj,
   })
 
-  return createdHospital
+  return createdCnpj
 }

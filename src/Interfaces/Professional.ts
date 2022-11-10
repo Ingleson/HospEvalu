@@ -1,4 +1,4 @@
-import { IHospitalRequest } from "./hospital"
+import { ICnpjRequest } from "./cpnj"
 
 export interface IServiceType {
   id: string
@@ -22,7 +22,7 @@ export interface IServiceTypeRequest {
 
 export interface IProfessional {
   id: string
-  hospital_id: string
+  cnpj_id: string
   serviceType: IServiceType
   email: string
   password: string
